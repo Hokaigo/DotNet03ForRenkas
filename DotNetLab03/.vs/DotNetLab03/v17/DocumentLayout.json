@@ -1,0 +1,92 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\1\\source\\repos\\DotNetLab03\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{4A08BD32-8ACF-4A3F-AFC7-09BA7CC8B566}|ClassLibrary1\\ClassLibrary1.csproj|C:\\Users\\1\\source\\repos\\DotNetLab03\\classlibrary1\\fileencryptor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4A08BD32-8ACF-4A3F-AFC7-09BA7CC8B566}|ClassLibrary1\\ClassLibrary1.csproj|solutionrelative:classlibrary1\\fileencryptor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A1E0510D-040C-4017-912A-576822AC2742}|FileEncryptionWindowsFormsApp\\FileEncryptionWindowsFormsApp.csproj|C:\\Users\\1\\source\\repos\\DotNetLab03\\fileencryptionwindowsformsapp\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A1E0510D-040C-4017-912A-576822AC2742}|FileEncryptionWindowsFormsApp\\FileEncryptionWindowsFormsApp.csproj|solutionrelative:fileencryptionwindowsformsapp\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4A08BD32-8ACF-4A3F-AFC7-09BA7CC8B566}|ClassLibrary1\\ClassLibrary1.csproj|C:\\Users\\1\\source\\repos\\DotNetLab03\\classlibrary1\\processmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4A08BD32-8ACF-4A3F-AFC7-09BA7CC8B566}|ClassLibrary1\\ClassLibrary1.csproj|solutionrelative:classlibrary1\\processmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98BA2A42-6233-439E-A6BD-9D24F19EC783}|ProcessManagerWindowsFormsApp\\ProcessManagerWindowsFormsApp.csproj|c:\\users\\1\\source\\repos\\dotnetlab03\\processmanagerwindowsformsapp\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98BA2A42-6233-439E-A6BD-9D24F19EC783}|ProcessManagerWindowsFormsApp\\ProcessManagerWindowsFormsApp.csproj|solutionrelative:processmanagerwindowsformsapp\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "FileEncryptor.cs",
+              "DocumentMoniker": "C:\\Users\\1\\source\\repos\\DotNetLab03\\ClassLibrary1\\FileEncryptor.cs",
+              "RelativeDocumentMoniker": "ClassLibrary1\\FileEncryptor.cs",
+              "ToolTip": "C:\\Users\\1\\source\\repos\\DotNetLab03\\ClassLibrary1\\FileEncryptor.cs",
+              "RelativeToolTip": "ClassLibrary1\\FileEncryptor.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAgwCkAAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-04T21:38:23.172Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "C:\\Users\\1\\source\\repos\\DotNetLab03\\FileEncryptionWindowsFormsApp\\Form1.cs",
+              "RelativeDocumentMoniker": "FileEncryptionWindowsFormsApp\\Form1.cs",
+              "ToolTip": "C:\\Users\\1\\source\\repos\\DotNetLab03\\FileEncryptionWindowsFormsApp\\Form1.cs",
+              "RelativeToolTip": "FileEncryptionWindowsFormsApp\\Form1.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEUAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-04T21:24:55.869Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ProcessManager.cs",
+              "DocumentMoniker": "C:\\Users\\1\\source\\repos\\DotNetLab03\\ClassLibrary1\\ProcessManager.cs",
+              "RelativeDocumentMoniker": "ClassLibrary1\\ProcessManager.cs",
+              "ToolTip": "C:\\Users\\1\\source\\repos\\DotNetLab03\\ClassLibrary1\\ProcessManager.cs",
+              "RelativeToolTip": "ClassLibrary1\\ProcessManager.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABYAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-03T23:07:30.728Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "C:\\Users\\1\\source\\repos\\DotNetLab03\\ProcessManagerWindowsFormsApp\\Form1.cs",
+              "RelativeDocumentMoniker": "ProcessManagerWindowsFormsApp\\Form1.cs",
+              "ToolTip": "C:\\Users\\1\\source\\repos\\DotNetLab03\\ProcessManagerWindowsFormsApp\\Form1.cs",
+              "RelativeToolTip": "ProcessManagerWindowsFormsApp\\Form1.cs",
+              "ViewState": "AgIAAJYAAAAAAAAAAAAmwLoAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-03T22:33:05.588Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
