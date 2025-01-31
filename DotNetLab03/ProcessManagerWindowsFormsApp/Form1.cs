@@ -91,7 +91,7 @@ namespace ProcessManagerWindowsFormsApp
                                 );
                             }
                         }
-                        catch (Exception) { /* Пропускаємо */ }
+                        catch (Exception) {  }
                     }
 
                     update_button.Enabled = true;
