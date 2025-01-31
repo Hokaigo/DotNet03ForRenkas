@@ -11,7 +11,7 @@ namespace FileEncryptionWindowsFormsApp
     {
         private BackgroundWorker worker;
         private Stopwatch sw;
-        private FileEncryptor encryptor;
+        private FileEncryptionService encryptionService;
         private string outputFolderPath;
 
         public Form1()
@@ -55,21 +55,15 @@ namespace FileEncryptionWindowsFormsApp
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     string inputFilePath = openFileDialog.FileName;
-
                     if (!Directory.Exists(outputFolderPath))
                     {
                         Directory.CreateDirectory(outputFolderPath);
                     }
 
-                    string outputFilePath;
-                    if (Path.GetExtension(inputFilePath) == ".enc") 
-                    {
-                        outputFilePath = Path.Combine(outputFolderPath, Path.GetFileNameWithoutExtension(inputFilePath));
-                    }
-                    else 
-                    {
-                        outputFilePath = Path.Combine(outputFolderPath, Path.GetFileName(inputFilePath) + ".enc");
-                    }
+                    string outputFilePath = Path.Combine(outputFolderPath,
+                        Path.GetExtension(inputFilePath) == ".enc"
+                            ? Path.GetFileNameWithoutExtension(inputFilePath)
+                            : Path.GetFileName(inputFilePath) + ".enc");
 
                     bool isEncrypting = Path.GetExtension(inputFilePath) != ".enc";
                     progressBar.Value = 0;
@@ -77,7 +71,7 @@ namespace FileEncryptionWindowsFormsApp
 
                     try
                     {
-                        encryptor = new FileEncryptor(keyInputTextBox.Text);
+                        encryptionService = new FileEncryptionService(keyInputTextBox.Text);
                         worker.RunWorkerAsync(new object[] { inputFilePath, outputFilePath, isEncrypting });
                     }
                     catch (Exception ex)
@@ -87,7 +81,6 @@ namespace FileEncryptionWindowsFormsApp
                 }
             }
         }
-
 
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -99,11 +92,11 @@ namespace FileEncryptionWindowsFormsApp
             try
             {
                 if (isEncrypting)
-                    encryptor.EncryptFile(inputFilePath, outputFilePath, progress => worker.ReportProgress(progress));
+                    encryptionService.EncryptFile(inputFilePath, outputFilePath, worker.ReportProgress);
                 else
-                    encryptor.DecryptFile(inputFilePath, outputFilePath, progress => worker.ReportProgress(progress));
+                    encryptionService.DecryptFile(inputFilePath, outputFilePath, worker.ReportProgress);
 
-                e.Result = new { FilePath = outputFilePath, IsEncrypting = isEncrypting, FileSize = new FileInfo(outputFilePath).Length };
+                e.Result = new FileProcessingResult(outputFilePath, isEncrypting, new FileInfo(outputFilePath).Length);
             }
             catch (Exception ex)
             {
@@ -124,11 +117,9 @@ namespace FileEncryptionWindowsFormsApp
             {
                 MessageBox.Show($"Error: {ex.Message}");
             }
-            else
+            else if (e.Result is FileProcessingResult result)
             {
-                var result = (dynamic)e.Result;
-                MessageBox.Show($"Шифрування завершено!\nФайл: {Path.GetFileName(result.FilePath)}\nРозмір: {(result.FileSize / 1024.0).ToString("F4")} КБ\n" +
-                    $"Час: {sw.Elapsed}");
+                MessageBox.Show($"Шифрування завершено!\nФайл: {Path.GetFileName(result.FilePath)}\nРозмір: {(result.FileSize / 1024.0):F4} КБ\nЧас: {sw.Elapsed}");
             }
             progressBar.Value = 0;
             progressLabel.Text = "0%";
