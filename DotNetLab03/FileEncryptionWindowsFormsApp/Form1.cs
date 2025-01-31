@@ -32,40 +32,50 @@ namespace FileEncryptionWindowsFormsApp
             worker.RunWorkerCompleted += worker_RunWorkerCompleted;
         }
 
-        private void EncryptOrDecryptButton_Click(object sender, EventArgs e)
+        private bool ValidateInputs()
         {
             if (string.IsNullOrWhiteSpace(keyInputTextBox.Text))
             {
                 MessageBox.Show("Здається, введений вами формат ключа не вірний.");
-                return;
+                return false;
             }
-
             if (string.IsNullOrWhiteSpace(outputFolderPath))
             {
                 MessageBox.Show("Будь ласка, оберіть місце для збереження файлу.");
-                return;
+                return false;
             }
+            return true;
+        }
 
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+        private string GetOutputFilePath(string inputFilePath)
+        {
+            if (!Directory.Exists(outputFolderPath))
             {
-                openFileDialog.Title = "Оберіть файл для шифрування або розшифрування";
-                openFileDialog.Filter = "Усі файли (*.*)|*.*";
-                openFileDialog.Multiselect = false;
+                Directory.CreateDirectory(outputFolderPath);
+            }
+            return Path.Combine(outputFolderPath,
+                Path.GetExtension(inputFilePath) == ".enc"
+                ? Path.GetFileNameWithoutExtension(inputFilePath)
+                : Path.GetFileName(inputFilePath) + ".enc");
+        }
 
+        private void EncryptOrDecryptButton_Click(object sender, EventArgs e)
+        {
+            if (!ValidateInputs()) return;
+
+            using (OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Title = "Оберіть файл для шифрування або розшифрування",
+                Filter = "Усі файли (*.*)|*.*",
+                Multiselect = false
+            })
+            {
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     string inputFilePath = openFileDialog.FileName;
-                    if (!Directory.Exists(outputFolderPath))
-                    {
-                        Directory.CreateDirectory(outputFolderPath);
-                    }
-
-                    string outputFilePath = Path.Combine(outputFolderPath,
-                        Path.GetExtension(inputFilePath) == ".enc"
-                            ? Path.GetFileNameWithoutExtension(inputFilePath)
-                            : Path.GetFileName(inputFilePath) + ".enc");
-
+                    string outputFilePath = GetOutputFilePath(inputFilePath);
                     bool isEncrypting = Path.GetExtension(inputFilePath) != ".enc";
+
                     progressBar.Value = 0;
                     sw = Stopwatch.StartNew();
 
@@ -104,10 +114,15 @@ namespace FileEncryptionWindowsFormsApp
             }
         }
 
+        private void UpdateProgress(int percentage)
+        {
+            progressBar.Value = percentage;
+            progressLabel.Text = $"{percentage}%";
+        }
+
         private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            progressBar.Value = e.ProgressPercentage;
-            progressLabel.Text = $"{e.ProgressPercentage}%";
+            UpdateProgress(e.ProgressPercentage);
         }
 
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -121,8 +136,7 @@ namespace FileEncryptionWindowsFormsApp
             {
                 MessageBox.Show($"Шифрування завершено!\nФайл: {Path.GetFileName(result.FilePath)}\nРозмір: {(result.FileSize / 1024.0):F4} КБ\nЧас: {sw.Elapsed}");
             }
-            progressBar.Value = 0;
-            progressLabel.Text = "0%";
+            UpdateProgress(0);
         }
 
         private void generateRandomKeyButton_Click(object sender, EventArgs e)
@@ -132,9 +146,11 @@ namespace FileEncryptionWindowsFormsApp
 
         private void setOutputPathButton_Click(object sender, EventArgs e)
         {
-            using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
+            using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog
             {
-                folderBrowserDialog.Description = "Оберіть місце для збереження файлу";
+                Description = "Оберіть місце для збереження файлу"
+            })
+            {
                 if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                 {
                     outputFolderPath = folderBrowserDialog.SelectedPath;
