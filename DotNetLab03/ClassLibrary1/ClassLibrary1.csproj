@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileEncryptionService.cs" />
+    <Compile Include="FileProcessingResult.cs" />
     <Compile Include="ProcessManager.cs" />
     <Compile Include="FileEncryptor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

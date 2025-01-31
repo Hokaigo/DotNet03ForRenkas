@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
+using System.Windows.Forms;
 using ClassLibrary1;
 
 namespace ProcessManagerWindowsFormsApp
@@ -35,41 +30,52 @@ namespace ProcessManagerWindowsFormsApp
             }
         }
 
+        private void RunInBackground(ThreadStart action)
+        {
+            Thread thread = new Thread(action) { IsBackground = true };
+            thread.Start();
+        }
+
+        private void UpdateUI(Action action)
+        {
+            if (InvokeRequired)
+                Invoke(action);
+            else
+                action();
+        }
+
         private void LoadProcessInThread()
         {
             update_button.Enabled = false;
             ProcessTableDataGridView.Rows.Clear();
 
-            Thread processThread = new Thread(() =>
+            RunInBackground(() =>
             {
-                var processes = ProcessManager.GetProcesses();
+                var processes = ProcessLoader.GetProcesses();
 
                 foreach (var process in processes)
                 {
                     try
                     {
-                        if (!process.HasExited) 
+                        if (!process.HasExited)
                         {
-                            Invoke(new Action(() =>
+                            UpdateUI(() =>
                             {
                                 ProcessTableDataGridView.Rows.Add(
                                     process.Id,
                                     process.ProcessName,
-                                    Math.Round(process.WorkingSet64 / Math.Pow(1024,2),4) + " МБ",
+                                    Math.Round(process.WorkingSet64 / Math.Pow(1024, 2), 4) + " МБ",
                                     process.StartTime.ToString(),
                                     process.PriorityClass.ToString(),
                                     process.Threads.Count);
-                            }));
+                            });
                         }
                     }
-                    catch (Exception ex) { }
+                    catch (Exception) { }
                 }
-                Invoke(new Action(() => update_button.Enabled = true));
+                UpdateUI(() => update_button.Enabled = true);
             });
-            processThread.IsBackground = true;
-            processThread.Start();
         }
-
 
         private void update_button_Click(object sender, EventArgs e)
         {
@@ -80,114 +86,65 @@ namespace ProcessManagerWindowsFormsApp
         {
             if (int.TryParse(stop_textBox.Text, out int processID))
             {
-                Thread killThread = new Thread(() =>
+                RunInBackground(() =>
                 {
                     try
                     {
                         var process = Process.GetProcessById(processID);
                         process.Kill();
-
-                        Invoke(new Action(() => LoadProcessInThread()));
+                        UpdateUI(() => LoadProcessInThread());
                     }
-                    catch (ArgumentException) 
+                    catch (ArgumentException)
                     {
-                        Invoke(new Action(() =>
-                        {
-                            MessageBox.Show($"Процес за ID {processID} не знайдено!");
-                        }));
-                    }
-                    catch (Exception ex) 
-                    {
-                        Invoke(new Action(() =>
-                        {
-                            MessageBox.Show($"Помилка: {ex.Message}!");
-                        }));
+                        UpdateUI(() => MessageBox.Show($"Процес за ID {processID} не знайдено!"));
                     }
                 });
-
-                killThread.IsBackground = true;
-                killThread.Start();
-            }
-            else
-            {
-                MessageBox.Show("Введіть коректний числовий ID процеса.");
             }
         }
-
 
         private void change_priority_button_Click(object sender, EventArgs e)
         {
-            if (int.TryParse(priority_textBox.Text, out int processID))
+            if (int.TryParse(priority_textBox.Text, out int processID) && priority_box.SelectedItem != null)
             {
-                if (priority_box.SelectedItem != null)
-                {
-                    var priority = (ProcessPriorityClass)Enum.Parse(typeof(ProcessPriorityClass), priority_box.SelectedItem.ToString());
+                var priority = (ProcessPriorityClass)Enum.Parse(typeof(ProcessPriorityClass), priority_box.SelectedItem.ToString());
 
-                    Thread priorityThread = new Thread(() =>
+                RunInBackground(() =>
+                {
+                    try
                     {
-                        try
-                        {
-                            ProcessManager.SetProcessPriority(processID, priority);
-                            Invoke(new Action(() => LoadProcessInThread()));
-                        }
-                        catch (ArgumentException)
-                        {
-                            Invoke(new Action(() =>
-                            {
-                                MessageBox.Show($"Процес за ID {processID} не знайдено!");
-                            }));
-                        }
-                        catch (InvalidOperationException)
-                        {
-                            Invoke(new Action(() =>
-                            {
-                                MessageBox.Show($"Процес за ID {processID} вже завершено!");
-                            }));
-                        }
-                        catch (Exception ex)
-                        {
-                            Invoke(new Action(() =>
-                            {
-                                MessageBox.Show($"Помилка: {ex.Message}!");
-                            }));
-                        }
-                    });
-
-                    priorityThread.IsBackground = true;
-                    priorityThread.Start();
-                }
-                else
-                {
-                    MessageBox.Show("Виберіть пріоритет із випадаючого списку.");
-                }
-            }
-            else
-            {
-                MessageBox.Show("Введіть коректний числовий ID процеса.");
+                        ProcessManager.SetProcessPriority(processID, priority);
+                        UpdateUI(() => LoadProcessInThread());
+                    }
+                    catch (ArgumentException)
+                    {
+                        UpdateUI(() => MessageBox.Show($"Процес за ID {processID} не знайдено!"));
+                    }
+                });
             }
         }
-
 
         private void start_app_button_Click(object sender, EventArgs e)
         {
             string appPath = path.Text;
-
-            if(!string.IsNullOrEmpty(appPath)) 
+            if (!string.IsNullOrEmpty(appPath))
             {
-                Thread startAppThread = new Thread(() =>
+                RunInBackground(() =>
                 {
                     try
                     {
                         Process.Start(appPath);
                     }
-                    catch(Exception ex) 
-                    { 
-                        MessageBox.Show($"Помилка: {ex}");
+                    catch (Exception ex)
+                    {
+                        UpdateUI(() => MessageBox.Show($"Помилка: {ex.Message}"));
                     }
                 });
-                startAppThread.IsBackground = true;
-                startAppThread.Start();
             }
         }
+    }
+
+    public class ProcessLoader
+    {
+        public static List<Process> GetProcesses() => ProcessManager.GetProcesses().ToList();
     }
 }
